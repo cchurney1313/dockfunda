@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  ech-redis:
+    image: redis:latest
+    container_name: ech-redis
+    volumes:
+      - ./redisdata:/data
+    networks:
+      - echnet
+
+  ech-app:
+    image: echpyred
+    container_name: ech-app
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - netname=ech-redis      # Set the environment variable as specified
+    networks:
+      - echnet
+    depends_on:
+      - ech-redis
+
+networks:
+  echnet:
+    driver: bridge
